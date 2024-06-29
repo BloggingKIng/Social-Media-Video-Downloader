@@ -8,6 +8,8 @@ django-rest-framework = "*"
 django = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+requests = "*"
+bs4 = "*"
 
 [dev-packages]
 
