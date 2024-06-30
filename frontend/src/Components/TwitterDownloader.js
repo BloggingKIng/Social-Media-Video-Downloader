@@ -1,6 +1,7 @@
 import { Container, Form,  Button, Spinner } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
+import {toast, ToastContainer}  from 'react-toastify';
 export default function TwitterDownloader() {
     const [link, setLink] = useState("");
     const [loading, setLoading] = useState(false);
@@ -12,17 +13,20 @@ export default function TwitterDownloader() {
         await axios.post('http://127.0.0.1:8000/api/download/twitter-video/', {url: link})
         .then((res) => {
             console.log(res.data);
+            toast.success('Video downloaded successfully!')
             setVideoLink(res.data.video.video);
             setLoading(false);
         })
         .catch((err) => {
             console.log(err);
+            toast.error("Error, while downloading video! Please try again later!")
             setLoading(false);
         })
     }
 
     return (
         <Container>
+            <ToastContainer />
             <h2 className="m-5 text-center">Twitter Video Downloader</h2>
             <Container style={{display:'flex', justifyContent:'center'}}> 
                 {!loading && <Form style={{width:'100%', display:'flex',justifyContent:'center'}}>

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.core.files import File
+from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -10,8 +11,7 @@ import re
 from .models import Video
 from .serializers import VideoSerializer
 import random
-
-
+import facebook_downloader
 # This piece of code was taken and modified from https://github.com/z1nc0r3/twitter-video-downloader/blob/main/twitter_downloader.py
 ##################################################################################################
 def download_video(url):
@@ -43,12 +43,26 @@ def download_twitter_video(url):
 
 #################################################################################
 
+def downlaod_facebook_video(url):
+    
+    file_name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4" 
+    file_path = os.path.join(os.getcwd(),'media','temp', file_name)
+    os.system(f"facebook_downloader {url} -o {file_path}")
+
+    video_instance = Video()
+    with open(file_path, 'rb') as file:
+        video_instance.video.save(file_name, File(file), save=True)
+
+    os.remove(file_path)
+    return video_instance
+
 @api_view(['POST'])
 def twitter_video_download(request):
-    # try:
+    try:
         url = request.data['url']
-        video = download_twitter_video(url)
+        video = downlaod_facebook_video(url)
         serializer = VideoSerializer(video)
         return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
-    # except Exception as e:
-    #     return Response(status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
