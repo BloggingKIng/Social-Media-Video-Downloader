@@ -44,7 +44,7 @@ def download_twitter_video(url):
 #################################################################################
 
 def downlaod_facebook_video(url):
-    
+
     file_name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4" 
     file_path = os.path.join(os.getcwd(),'media','temp', file_name)
     os.system(f"facebook_downloader {url} -o {file_path}")
@@ -60,7 +60,7 @@ def downlaod_facebook_video(url):
 def twitter_video_download(request):
     try:
         url = request.data['url']
-        video = downlaod_facebook_video(url)
+        video = download_twitter_video(url)
         serializer = VideoSerializer(video)
         return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
     except Exception as e:
