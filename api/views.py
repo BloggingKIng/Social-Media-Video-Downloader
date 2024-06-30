@@ -4,6 +4,7 @@ from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from pytube import YouTube
 import requests
 import bs4
 import os
@@ -20,7 +21,7 @@ def download_video(url):
     name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4"
     response = requests.get(url, stream=True)
     block_size = 1024
-    download_path = os.path.join(os.getcwd(),'media','temp', name)
+    download_path = os.path.join(settings.BASE_DIR,'media','temp', name)
 
     with open(download_path, "wb") as file:
         for data in response.iter_content(block_size):
@@ -48,7 +49,7 @@ def download_twitter_video(url):
 def downlaod_facebook_video(url):
     
     file_name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4" 
-    file_path = os.path.join(os.getcwd(),'media','temp', file_name)
+    file_path = os.path.join(settings.BASE_DIR,'media','temp', file_name)
     downloader = facebook_downloader.downloader.FacebookDownloader(video_url=url, output_filename=file_path)
     downloader.download_video()
     video_instance = Video()
@@ -58,11 +59,35 @@ def downlaod_facebook_video(url):
     os.remove(file_path)
     return video_instance
 
+def download_youtube_video(url):
+    name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4"
+    path = os.path.join(settings.BASE_DIR,'media','temp')
+    youtube = YouTube(url)
+    video = youtube.streams.get_highest_resolution()
+    video.download(output_path=path, filename=name)
+    video_instance = Video()
+    complete_path = path+'/'+name
+    with open(complete_path, 'rb') as file:
+        video_instance.video.save(name, File(file), save=True)
+    os.remove(complete_path)
+    return video_instance
+
 @api_view(['POST'])
 def twitter_video_download(request):
     try:
         url = request.data['url']
         video = download_twitter_video(url)
+        serializer = VideoSerializer(video)
+        return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print(e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def facebook_video_download(request):
+    try:
+        url = request.data['url']
+        video = downlaod_facebook_video(url)
         serializer = VideoSerializer(video)
         return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
     except Exception as e:

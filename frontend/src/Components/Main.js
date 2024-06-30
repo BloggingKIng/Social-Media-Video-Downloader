@@ -1,6 +1,7 @@
 import {Nav, Container} from 'react-bootstrap';
 import React, {useState} from 'react';
 import TwitterDownloader from "./TwitterDownloader";
+import FacebookVideoDownloader from "./FacebookVideoDownloader";
 export default function Main (){
     const [activeKey, setActiveKey] = useState('twitter');
     const handleSetActiveKey = (key) => {
@@ -21,7 +22,8 @@ export default function Main (){
         </Container>
         <Container>
             {
-                activeKey==="twitter"? <TwitterDownloader /> : null
+                activeKey==="twitter"? <TwitterDownloader /> : 
+                activeKey==="facebook"? <FacebookVideoDownloader /> : null
             }
         </Container>
     </Container>

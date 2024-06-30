@@ -119,7 +119,7 @@ class FacebookDownloader:
                     part_file.write(chunk)
 
         def download_file(url, output_path):
-            num_threads = 15
+            num_threads = 30
             response = requests.head(url)
             file_size = int(response.headers['Content-Length'])
             part_size = file_size // num_threads
