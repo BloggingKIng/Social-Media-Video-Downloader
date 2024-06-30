@@ -93,3 +93,14 @@ def facebook_video_download(request):
     except Exception as e:
         print(e)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def youtube_video_download(request):
+    try:
+        url = request.data['url']
+        video = download_youtube_video(url)
+        serializer = VideoSerializer(video)
+        return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print(e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)

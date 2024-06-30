@@ -2,26 +2,23 @@ import { Container, Form,  Button, Spinner } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import {toast, ToastContainer}  from 'react-toastify';
-export default function TwitterDownloader() {
-    const [link, setLink] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [videoLink, setVideoLink] = useState("");
+export default function TwitterDownloader(props) {
+    const {link, loading, videoLink} = props.data;
+    const  setData = (data) => props.setData(data);
 
     const handleDownload = async() => {
         console.log(link);
-        setLoading(true);
-        setVideoLink("");
+        setData({link: "", loading: true, videoLink: ""});
         await axios.post('http://127.0.0.1:8000/api/download/facebook-video/', {url: link})
         .then((res) => {
             console.log(res.data);
             toast.success('Video downloaded successfully!')
-            setVideoLink(res.data.video.video);
-            setLoading(false);
+            setData({link: link, loading: false, videoLink: res.data.video.video});
         })
         .catch((err) => {
             console.log(err);
             toast.error("Error, while downloading video! Please try again later!")
-            setLoading(false);
+            setData({link: link, loading: false, videoLink: ""});
         })
     }
 
@@ -32,7 +29,7 @@ export default function TwitterDownloader() {
             <Container style={{display:'flex', justifyContent:'center'}}> 
                 {!loading && <Form style={{width:'100%', display:'flex',justifyContent:'center'}}>
                     <Form.Group className="" controlId="link" style={{width:'50%'}}>
-                        <Form.Control type="text" placeholder="Enter the link of the facebook video" value={link} onChange={(e) => setLink(e.target.value)} />
+                        <Form.Control type="text" placeholder="Enter the link of the facebook video" value={link} onChange={(e) => setData({...props.data, link: e.target.value})} />
                     </Form.Group>
                     <Form.Group>
                         <Button variant="primary" style={{height:'fit-content'}} onClick={handleDownload}>
@@ -46,10 +43,11 @@ export default function TwitterDownloader() {
             </Container>
             {
                 videoLink !== "" && 
-                <Container className="mt-5">
-                    <h2 className="text-center">Downloaded Video</h2>
+                <Container className="mt-5 mb-5">
+                    <h2 className="text-center mb-3">Downloaded Video</h2>
+                    <p className="text-center text-muted">Click the 3 dots (⫶) at the bottom right of the video to download</p>
                     <Container style={{display:'flex', justifyContent:'center'}}>
-                        <video width="500" height="260" controls>
+                        <video width="60%" height="60%" controls>
                             <source src={"http://127.0.0.1:8000" +videoLink} type="video/mp4" />
                         </video>
                     </Container>
