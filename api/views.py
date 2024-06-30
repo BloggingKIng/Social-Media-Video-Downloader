@@ -8,6 +8,8 @@ import requests
 import bs4
 import os
 import re
+
+import facebook_downloader.downloader
 from .models import Video
 from .serializers import VideoSerializer
 import random
@@ -44,11 +46,11 @@ def download_twitter_video(url):
 #################################################################################
 
 def downlaod_facebook_video(url):
-
+    
     file_name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4" 
     file_path = os.path.join(os.getcwd(),'media','temp', file_name)
-    os.system(f"facebook_downloader {url} -o {file_path}")
-
+    downloader = facebook_downloader.downloader.FacebookDownloader(video_url=url, output_filename=file_path)
+    downloader.download_video()
     video_instance = Video()
     with open(file_path, 'rb') as file:
         video_instance.video.save(file_name, File(file), save=True)

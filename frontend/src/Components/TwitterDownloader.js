@@ -10,6 +10,7 @@ export default function TwitterDownloader() {
     const handleDownload = async() => {
         console.log(link);
         setLoading(true);
+        setVideoLink("");
         await axios.post('http://127.0.0.1:8000/api/download/twitter-video/', {url: link})
         .then((res) => {
             console.log(res.data);
