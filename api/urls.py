@@ -5,4 +5,5 @@ urlpatterns = [
     path('download/facebook-video/', views.facebook_video_download),
     path('download/youtube-video/', views.youtube_video_download),
     path('download/reddit-video/', views.reddit_video_download),
+    path('download/tiktok-video/', views.tiktok_video_download),
 ]

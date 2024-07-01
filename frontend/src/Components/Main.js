@@ -4,6 +4,7 @@ import TwitterDownloader from './TwitterDownloader';
 import FacebookVideoDownloader from './FacebookVideoDownloader';
 import YoutubeVideoDownloader from './YoutubeVideoDownloader';
 import RedditVideoDownloader from './RedditVideoDownloader';
+import TiktokVideoDownloader from './TiktokVideoDownloader';
 import './main.css';
 export default function Main (){
     const [activeKey, setActiveKey] = useState('twitter');
@@ -11,6 +12,7 @@ export default function Main (){
     const [facebookData, setFacebookData] = useState({link:'', videoLink: '', loading: false});
     const [youtubeData, setYoutubeData] = useState({link:'', videoLink: '', loading: false});
     const [redditData, setRedditData] = useState({link:'', videoLink: '', loading: false});
+    const [tiktokData, setTiktokData] = useState({link:'', videoLink: '', loading: false});
 
     const handleSetActiveKey = (key) => {
         console.log(key);
@@ -32,6 +34,9 @@ export default function Main (){
                 <Nav.Item>
                     <Nav.Link eventKey={'reddit'}  onClick={(e)=>e.preventDefault()} active={activeKey === 'reddit'}>Reddit Video Downloader</Nav.Link>
                 </Nav.Item>
+                <Nav.Item>
+                    <Nav.Link eventKey={'tiktok'}  onClick={(e)=>e.preventDefault()} active={activeKey === 'tiktok'}>Tiktok Video Downloader</Nav.Link>
+                </Nav.Item>
             </Nav>
         </Container>
         <Container>
@@ -40,6 +45,8 @@ export default function Main (){
                 activeKey==="facebook"? <FacebookVideoDownloader data={facebookData} setData={setFacebookData} /> : 
                 activeKey==="youtube"? <YoutubeVideoDownloader data={youtubeData} setData={setYoutubeData}/> : 
                 activeKey==="reddit"? <RedditVideoDownloader data={redditData} setData={setRedditData}/> :
+                activeKey==="tiktok"? <TiktokVideoDownloader data={tiktokData} setData={setTiktokData}/> :
+
                 null
             }
         </Container>

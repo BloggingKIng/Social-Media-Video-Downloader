@@ -11,6 +11,9 @@ django-cors-headers = "*"
 requests = "*"
 bs4 = "*"
 pytube = "*"
+pyktok = "*"
+browser-cookie3 = "*"
+pandas = "*"
 
 [dev-packages]
 
