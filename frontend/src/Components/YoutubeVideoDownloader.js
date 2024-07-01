@@ -2,7 +2,7 @@ import { Container, Form,  Button, Spinner } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import {toast, ToastContainer}  from 'react-toastify';
-export default function TwitterDownloader(props) {
+export default function YoutubeVideoDownloader(props) {
     const {link, loading, videoLink} = props.data;
     const  setData = (data) => props.setData(data);
 
@@ -47,7 +47,7 @@ export default function TwitterDownloader(props) {
                     <h2 className="text-center mb-3">Downloaded Video</h2>
                     <p className="text-center text-muted">Click the 3 dots (⫶) at the bottom right of the video to download</p>
                     <Container style={{display:'flex', justifyContent:'center'}}>
-                        <video width="60%" height="60%" controls>
+                        <video width="60%" height="60%" style={{maxWidth:'600px', maxHeight:'400px'}} controls>
                             <source src={"http://127.0.0.1:8000" +videoLink} type="video/mp4" />
                         </video>
                     </Container>

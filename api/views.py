@@ -15,6 +15,7 @@ from .models import Video
 from .serializers import VideoSerializer
 import random
 import facebook_downloader
+from RedDownloader import RedDownloader
 # This piece of code was taken and modified from https://github.com/z1nc0r3/twitter-video-downloader/blob/main/twitter_downloader.py
 ##################################################################################################
 def download_video(url):
@@ -59,6 +60,20 @@ def downlaod_facebook_video(url):
     os.remove(file_path)
     return video_instance
 
+def download_reddit_video(url):
+    filename = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))
+    folder_path = os.path.join(settings.BASE_DIR,'media','temp\\')
+    file_path = os.path.join(settings.BASE_DIR,'media','temp', filename+'.mp4')
+    print(file_path)
+    print(folder_path)
+    print(filename)
+    video = RedDownloader.Download(url=url, output=filename, destination=folder_path)
+    video_instance = Video()
+    with open(file_path, 'rb') as file:
+        video_instance.video.save(filename+'.mp4', File(file), save=True)
+    os.remove(file_path)
+    return video_instance
+
 def download_youtube_video(url):
     name = "".join(random.choices('abcdefghijklmnopqrstuvwxyz', k=20))+".mp4"
     path = os.path.join(settings.BASE_DIR,'media','temp')
@@ -99,6 +114,17 @@ def youtube_video_download(request):
     try:
         url = request.data['url']
         video = download_youtube_video(url)
+        serializer = VideoSerializer(video)
+        return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print(e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def reddit_video_download(request):
+    try:
+        url = request.data['url']
+        video = download_reddit_video(url)
         serializer = VideoSerializer(video)
         return Response({"video":serializer.data}, status=status.HTTP_201_CREATED)
     except Exception as e:
