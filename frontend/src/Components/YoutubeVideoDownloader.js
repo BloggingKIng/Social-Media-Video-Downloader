@@ -9,7 +9,7 @@ export default function YoutubeVideoDownloader(props) {
     const handleDownload = async() => {
         console.log(link);
         setData({link: "", loading: true, videoLink: ""});
-        await axios.post('http://127.0.0.1:8000/api/download/youtube-video/', {url: link})
+        await axios.post('/api/download/youtube-video/', {url: link})
         .then((res) => {
             console.log(res.data);
             toast.success('Video downloaded successfully!')
@@ -48,7 +48,7 @@ export default function YoutubeVideoDownloader(props) {
                     <p className="text-center text-muted">Click the 3 dots (⫶) at the bottom right of the video to download</p>
                     <Container style={{display:'flex', justifyContent:'center'}}>
                         <video width="60%" height="60%" style={{maxWidth:'600px', maxHeight:'400px'}} controls>
-                            <source src={"http://127.0.0.1:8000" +videoLink} type="video/mp4" />
+                            <source src={videoLink} type="video/mp4" />
                         </video>
                     </Container>
                 </Container>
